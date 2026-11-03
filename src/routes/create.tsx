@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { emptyPortfolio, headerSrc, loadPortfolios, savePortfolio, useStore, validatePortfolio, type Portfolio } from "@/lib/portfolio";
 
 export const Route = createFileRoute("/create")({
-  validateSearch: (s: Record<string, unknown>) => ({ id: typeof s.id === "string" ? s.id : undefined }),
+  validateSearch: (s: Record<string, unknown>): { id?: string } => (typeof s["id"] === "string" ? { id: s["id"] } : {}),
   head: () => ({
     meta: [
       { title: "Create Portfolio — Aarambha Academy" },
@@ -37,7 +37,7 @@ function CreatePage() {
   }, [id]);
 
   const save = async () => {
-    if (!p.studentName.trim() || !p.className.trim()) return toast.error("Student name and class are required");
+    if (!p.studentName.trim() || !p.className.trim()) { toast.error("Student name and class are required"); return; }
     await savePortfolio(p);
     toast.success("Portfolio saved");
     if (id !== p.id) nav({ to: "/create", search: { id: p.id }, replace: true });
@@ -47,7 +47,7 @@ function CreatePage() {
   return (
     <AppShell>
       <PageTitle title={id ? "Edit portfolio" : "Create new portfolio"} sub="Fill in the details — the A4 page updates as you type.">
-        <Button variant="outline" onClick={() => nav({ to: "/create", search: { id: undefined } })}><Plus />New</Button>
+        <Button variant="outline" onClick={() => nav({ to: "/create", search: {} })}><Plus />New</Button>
         <Button onClick={save}><Save />Save</Button>
       </PageTitle>
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
