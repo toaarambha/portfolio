@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { buildIndividualZip, buildPdf, downloadBlob, fileNameFor } from "@/lib/pdf";
 import { validatePortfolio, displayName, type Portfolio } from "@/lib/portfolio";
 
-export function ExportPanel({ list, current, header, label = "class" }: { list: Portfolio[]; current?: Portfolio; header: string; label?: string }) {
+export function ExportPanel({ list, current, header, label = "class" }: { list: Portfolio[]; current?: Portfolio | undefined; header: string; label?: string }) {
   const [status, setStatus] = useState<string>("");
   const [busy, setBusy] = useState(false);
   const [ready, setReady] = useState<{ blob: Blob; name: string } | null>(null);

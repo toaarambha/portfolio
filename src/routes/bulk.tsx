@@ -14,7 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { displayName, emptyPortfolio, headerSrc, loadBatches, saveBatch, uid, useStore, validatePortfolio, type Batch, type Portfolio } from "@/lib/portfolio";
 
 export const Route = createFileRoute("/bulk")({
-  validateSearch: (s: Record<string, unknown>) => ({ id: typeof s.id === "string" ? s.id : undefined }),
+  validateSearch: (s: Record<string, unknown>): { id?: string } => (typeof s["id"] === "string" ? { id: s["id"] } : {}),
   head: () => ({
     meta: [
       { title: "Bulk Portfolio Generator — Aarambha Academy" },
@@ -56,10 +56,11 @@ function BulkPage() {
   const remove = (i: number) => { if (b.students.length === 1) return; update(b.students.filter((_, j) => j !== i)); setSel(Math.max(0, Math.min(sel, b.students.length - 2))); };
   const move = (i: number, d: number) => {
     const j = i + d; if (j < 0 || j >= b.students.length) return;
-    const l = [...b.students]; [l[i], l[j]] = [l[j], l[i]]; update(l); setSel(j);
+    const l = [...b.students]; [l[i], l[j]] = [l[j]!, l[i]!]; update(l); setSel(j);
   };
   const duplicateActivity = () => {
     const src = b.students[sel];
+    if (!src) return;
     update(b.students.map((s) => ({ ...s, subject: src.subject, activityTitle: src.activityTitle, date: src.date, time: src.time })));
     toast.success("Activity details copied to all students");
   };
@@ -73,7 +74,7 @@ function BulkPage() {
     if (!f) return;
     try {
       const wb = XLSX.read(await f.arrayBuffer());
-      const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[wb.SheetNames[0]]);
+      const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[wb.SheetNames[0]!]!);
       const pick = (r: Record<string, unknown>, ...keys: string[]) => {
         const k = Object.keys(r).find((x) => keys.includes(x.trim().toLowerCase()));
         return k ? String(r[k] ?? "").trim() : "";
@@ -86,7 +87,7 @@ function BulkPage() {
           roll: pick(r, "roll number", "roll no", "roll"),
         }))
         .filter((p) => p.studentName);
-      if (!list.length) return toast.error("No rows found. Use columns: Student Name, Class, Section, Roll Number");
+      if (!list.length) { toast.error("No rows found. Use columns: Student Name, Class, Section, Roll Number"); return; }
       const existing = b.students.filter((s) => s.studentName || Object.keys(s.photos).length);
       update([...existing, ...list]);
       toast.success(`Imported ${list.length} students — now add their photos`);

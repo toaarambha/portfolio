@@ -23,14 +23,15 @@ export function PortfolioPage({ p, header }: { p: Portfolio; header: string }) {
       </div>
 
       {L.photos.map((box, i) => {
-        const src = p.photos[PHOTO_KEYS[i]];
+        const key = PHOTO_KEYS[i]!;
+        const src = p.photos[key];
         return (
           <div
             key={i}
             className="a4-photo"
             style={{ left: mm(box.x), top: mm(box.y), width: mm(box.w), height: mm(box.h) }}
           >
-            {src ? <img src={src} alt={PHOTO_KEYS[i]} /> : <span className="a4-photo-empty">{PHOTO_KEYS[i]}</span>}
+            {src ? <img src={src} alt={key} /> : <span className="a4-photo-empty">{key}</span>}
           </div>
         );
       })}
@@ -40,7 +41,7 @@ export function PortfolioPage({ p, header }: { p: Portfolio; header: string }) {
         ["Date:", p.date, 30],
         ["Subject:", p.subject, 50],
       ].map(([label, val, len], i) => (
-        <div key={i} className="a4-field a4-big" style={{ left: mm(L.fields.x), top: mm(L.fields.y[i] - 5.2) }}>
+        <div key={i} className="a4-field a4-big" style={{ left: mm(L.fields.x), top: mm(L.fields.y[i]! - 5.2) }}>
           <b>{label}</b>
           <span className="a4-line" style={{ width: mm(len as number) }}>{val}</span>
         </div>

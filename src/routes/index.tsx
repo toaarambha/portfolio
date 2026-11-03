@@ -24,8 +24,8 @@ function Dashboard() {
   return (
     <AppShell>
       <PageTitle title="Namaste, teacher" sub="Document your students' learning activities in three photographs.">
-        <Button asChild><Link to="/create"><FilePlus2 />Create New Portfolio</Link></Button>
-        <Button asChild variant="secondary"><Link to="/bulk"><Layers />Bulk Generate</Link></Button>
+        <Button asChild><Link to="/create" search={{}}><FilePlus2 />Create New Portfolio</Link></Button>
+        <Button asChild variant="secondary"><Link to="/bulk" search={{}}><Layers />Bulk Generate</Link></Button>
       </PageTitle>
       <div className="grid gap-4 sm:grid-cols-3">
         <Stat icon={FileText} label="Portfolios created" value={all.length} />

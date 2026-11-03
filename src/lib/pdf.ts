@@ -56,8 +56,8 @@ async function drawPage(doc: jsPDF, p: Portfolio, header: string) {
 
   // Photos — contain-fit within each box, thin border around the photo
   for (let i = 0; i < 3; i++) {
-    const box = L.photos[i];
-    const src = p.photos[PHOTO_KEYS[i]];
+    const box = L.photos[i]!;
+    const src = p.photos[PHOTO_KEYS[i]!];
     if (!src) continue;
     const s = await imgSize(src);
     const scale = Math.min(box.w / s.w, box.h / s.h);
@@ -94,7 +94,7 @@ export async function buildPdf(list: Portfolio[], headerSrc: string): Promise<Bl
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "portrait" });
   for (let i = 0; i < list.length; i++) {
     if (i > 0) doc.addPage("a4", "portrait");
-    await drawPage(doc, list[i], header);
+    await drawPage(doc, list[i]!, header);
   }
   return doc.output("blob");
 }
@@ -108,10 +108,10 @@ export async function buildIndividualZip(list: Portfolio[], headerSrc: string) {
   const zip = new JSZipLike();
   const used = new Set<string>();
   for (let i = 0; i < list.length; i++) {
-    let name = `${String(i + 1).padStart(2, "0")}-${fileNameFor(list[i])}`;
+    let name = `${String(i + 1).padStart(2, "0")}-${fileNameFor(list[i]!)}`;
     while (used.has(name)) name = "x" + name;
     used.add(name);
-    zip.file(name, await buildPdf([list[i]], headerSrc));
+    zip.file(name, await buildPdf([list[i]!], headerSrc));
   }
   return zip.generateAsync({ type: "blob", compression: "STORE" });
 }

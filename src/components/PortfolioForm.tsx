@@ -13,7 +13,7 @@ const PHOTO_INFO: Record<PhotoKey, { title: string; text: string }> = {
   completion: { title: "3 · Completion", text: "Upload the photograph showing the completed activity." },
 };
 
-function PhotoCard({ k, src, onChange }: { k: PhotoKey; src?: string; onChange: (v?: string) => void }) {
+function PhotoCard({ k, src, onChange }: { k: PhotoKey; src?: string | undefined; onChange: (v?: string) => void }) {
   const input = useRef<HTMLInputElement>(null);
   const [drag, setDrag] = useState(false);
   const [busy, setBusy] = useState(false);
