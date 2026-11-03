@@ -54,7 +54,7 @@ function PhotoCard({ k, src, onChange }: { k: PhotoKey; src?: string; onChange: 
       {src && (
         <div className="flex gap-2">
           <Button size="sm" variant="outline" className="flex-1" onClick={() => input.current?.click()}><RefreshCw />Replace</Button>
-          <Button size="sm" variant="ghost" onClick={() => onChange(undefined)}><Trash2 />Remove</Button>
+          <Button size="icon" variant="ghost" aria-label="Remove image" onClick={() => onChange(undefined)}><Trash2 /></Button>
         </div>
       )}
     </div>
