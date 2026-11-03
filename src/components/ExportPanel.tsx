@@ -15,7 +15,7 @@ export function ExportPanel({ list, current, header, label = "class" }: { list: 
       .map((p, i) => ({ i, errs: validatePortfolio(p), p }))
       .filter((x) => x.errs.length);
     if (bad.length) {
-      toast.error(`${displayName(bad[0].p)} (#${bad[0].i + 1}): ${bad[0].errs.join("; ")}`);
+      toast.error(`${displayName(bad[0]!.p)} (#${bad[0]!.i + 1}): ${bad[0]!.errs.join("; ")}`);
       return false;
     }
     return true;
@@ -23,7 +23,7 @@ export function ExportPanel({ list, current, header, label = "class" }: { list: 
 
   const run = async (kind: "current" | "all" | "zip") => {
     const items = kind === "current" && current ? [current] : list;
-    if (!items.length) return toast.error("No students to export");
+    if (!items.length) { toast.error("No students to export"); return; }
     if (!check(items)) return;
     setBusy(true);
     setReady(null);
@@ -35,7 +35,7 @@ export function ExportPanel({ list, current, header, label = "class" }: { list: 
         setStatus(`${items.length} separate PDFs ready`);
       } else {
         const blob = await buildPdf(items, header);
-        const name = kind === "current" ? fileNameFor(items[0]) : `portfolios_${label}.pdf`;
+        const name = kind === "current" ? fileNameFor(items[0]!) : `portfolios_${label}.pdf`;
         setReady({ blob, name });
         setStatus(`${items.length} student${items.length > 1 ? "s" : ""} · ${items.length} A4 page${items.length > 1 ? "s" : ""} ready`);
       }
